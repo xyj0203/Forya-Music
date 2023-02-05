@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.music.Mapper.UserMapper">
+    <resultMap id="applyVo" type="com.example.music.entity.pojo.Vo.ApplyVo">
+        <id property="applyId" column="apply_id"/>
+        <result property="applyTime" column="send_time"/>
+        <result property="sendContent" column="send_content"/>
+        <result property= "applyUserId" column="user_id"/>
+        <result property="applyUserAccount" column="account"/>
+        <result property="applyUserUsername" column="username"/>
+        <result property="applyUserHeadImg" column="head_img"/>
+        <result property="applyUserSexValue" column="sex"/>
+        <result property="applyUserBirthdayTime" column="birthday"/>
+    </resultMap>
+    <insert id="addLinkedMan" parameterType="com.example.music.entity.pojo.Entity.Apply">
+        insert into application(apply_id, apply_user_id, recieve_user_id, send_time, send_content, apply_state)
+        VALUES (#{applyId}, #{applyUserId}, #{receiverUserId}, #{applyTime}, #{sendContent}, #{applyState})
+    </insert>
+    <insert id="addLinkedMantogether">
+        insert into user_friend(f_id, friend_id, user_id)
+        values(null,#{friendId},#{userId})
+    </insert>
+    <update id="updateApplyStatus">
+        update application
+        set apply_state = #{state}
+        where apply_id = #{applyId}
+    </update>
+
+    <delete id="deleteLinkedMan" parameterType="java.lang.Long">
+        delete from user_friend
+        where friend_id = #{userId} OR user_id = #{userId}
+    </delete>
+
+    <select id="isLinked" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM user_friend WHERE user_id = #{userId} AND friend_id = #{friendId}
+    </select>
+    <select id="queryApplyList" resultMap="applyVo"
+            parameterType="java.lang.Long">
+        SELECT u.user_id,u.account,u.sex,u.username,u.head_img,u.birthday,
+               a.apply_id,a.send_time,a.apply_state,a.send_content
+               from application a
+        left join user u on a.apply_user_id = u.user_id
+        where recieve_user_id = #{userId}
+        order by send_time desc
+    </select>
+    <select id="queryLinkedManList" resultType="com.example.music.entity.pojo.Entity.User"
+            parameterType="java.lang.Long">
+        select *
+        from user
+        where user_id in (
+        select friend_id from user_friend where user_id = #{userId}
+        )
+    </select>
+</mapper>

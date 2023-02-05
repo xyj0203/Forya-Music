@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.music.Mapper.PermissionMapper">
+    <insert id="addRole">
+        insert into role (id, name, description)
+        VALUES (#{id}, #{name}, #{description})
+    </insert>
+    <insert id="addPermissionForRole" parameterType="java.util.List">
+        insert into role_permission
+            (role_id, permission_id)
+        values
+        <foreach collection="list" item="permissionId" index="index" separator=",">
+            (
+             #{roleId}
+            ,
+             #{permissionId}
+            )
+        </foreach>
+
+    </insert>
+    <update id="updateRole">
+        update role
+        set name = #{name},
+            `description` = #{description}
+        where id = #{id}
+
+    </update>
+    <delete id="deleteRoles">
+        delete from role
+        where id =
+        <foreach collection="roleIds" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="findAll" resultType="com.example.music.entity.pojo.Entity.Permission">
+        select *
+        from user_permission
+    </select>
+    <select id="findAllByUserId" resultType="com.example.music.entity.pojo.Entity.Permission"
+            parameterType="java.lang.Long">
+    </select>
+    <select id="selectPermissionByLevel" resultType="java.lang.String" parameterType="java.lang.Integer">
+        select name
+        from user_permission
+                 left join role_permission rp
+                           on user_permission.permission_id = rp.permission_id
+        where rp.id = #{level}
+    </select>
+    <select id="getNameByLevel" resultType="java.lang.String">
+        select name
+        from user_permission
+                 left join role_permission rp
+                           on user_permission.permission_id = rp.permission_id
+        where rp.id = #{level}
+    </select>
+    <select id="selectPermissionById" resultType="com.example.music.entity.pojo.Entity.Permission">
+        select *
+        from user_permission pr
+                 inner join role_permission rp on pr.permission_id = rp.permission_id
+        where rp.role_id = #{id}
+    </select>
+    <select id="findAllRole" resultType="com.example.music.entity.pojo.Entity.Role">
+        select id, name, description
+        from role
+    </select>
+    <select id="selectUserRole" resultType="java.lang.String">
+        select r.name
+        from user_role
+        inner join role r on user_role.role_id = r.id
+        where user_id = #{userId}
+    </select>
+
+</mapper>

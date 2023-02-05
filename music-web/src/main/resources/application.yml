@@ -1,0 +1,5 @@
+server:
+  port: 8081
+spring:
+  profiles:
+    active: config,dao,service,tool

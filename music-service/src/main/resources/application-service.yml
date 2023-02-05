@@ -1,0 +1,12 @@
+upload:
+  mode: mino
+  mino:
+    bucket-name: xiexiaojia
+    secret-id: XUYUJIE
+    secret-key: XIEXIAOJIA
+    gateway: http://files.xyjxkl.top/
+  local:
+    # nginx映射本地文件路径，无域名则为 ip:83
+    url: http://你的文件上传子域名/
+    # 本地文件存储路径
+    path: /usr/local/upload/

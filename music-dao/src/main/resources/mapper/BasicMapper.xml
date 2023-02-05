@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.music.Mapper.BasicMapper">
+
+    <insert id="register" parameterType="com.example.music.entity.pojo.Entity.User" useGeneratedKeys="true" keyProperty="user_id">
+        insert into user(user_id,account,password,email,head_img)
+        values(null,#{account},#{password},#{email},#{headImg})
+    </insert>
+    <insert id="setUserRole">
+        insert into user_role (user_id, role_id) values (#{userId}, #{role})
+    </insert>
+    <select id="selectUserByEmail" resultType="com.example.music.entity.pojo.Entity.User"
+            parameterType="java.lang.String">
+        select * from user where email = #{email}
+    </select>
+    <select id="selectUserByAccount" resultType="com.example.music.entity.pojo.Entity.User"
+            parameterType="java.lang.String">
+        select * from user where account = #{account}
+    </select>
+</mapper>
